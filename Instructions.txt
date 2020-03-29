@@ -1,0 +1,1 @@
+docker build --no-cache -t docker-php7.4-nginx .
