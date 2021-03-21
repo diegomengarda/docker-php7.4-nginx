@@ -51,6 +51,9 @@ RUN add-apt-repository ppa:ondrej/php && \
     rm /etc/nginx/sites-enabled/default && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+RUN apt -y install gcc make autoconf libc-dev && \
+    pecl install redis
+
 COPY app.conf /etc/nginx/sites-enabled/app
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -75,6 +78,7 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     sed -i "s/listen.group = .*/listen.group = ${USER}/" /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i "s/^user.*/user ${USER};/" /etc/nginx/nginx.conf && \
+    echo "extension=redis.so" >> /etc/php/7.4/fpm/php.ini && \
     mkdir -p $APPDIR && \
     chown -R $USER:$USER $APPDIR && \
     find $APPDIR -type d -exec chmod 775 {} + && \
@@ -82,7 +86,7 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     chmod +x /usr/local/bin/docker-entrypoint && \
     chmod +x /usr/local/bin/start
 
-EXPOSE 80
+EXPOSE 80 6006
 
 ENTRYPOINT ["docker-entrypoint"]
 
