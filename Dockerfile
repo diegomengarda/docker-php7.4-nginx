@@ -44,16 +44,17 @@ RUN add-apt-repository ppa:ondrej/php && \
     php7.4-xsl \
     php7.4-zip \
     php7.4-sqlite \
-    php7.4-mongodb \
     php-apcu \
+    php-xml \
     php-pear && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm /etc/nginx/sites-enabled/default && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apt -y install gcc make autoconf libc-dev && \
-    pecl install redis
+RUN apt -y install gcc make autoconf libc-dev
+
+RUN pecl install redis mongodb
 
 COPY app.conf /etc/nginx/sites-enabled/app
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -80,6 +81,7 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     sed -i "s/;catch_workers_output = .*/catch_workers_output = yes/" /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i "s/^user.*/user ${USER};/" /etc/nginx/nginx.conf && \
     echo "extension=redis.so" >> /etc/php/7.4/fpm/php.ini && \
+    echo "extension=mongodb.so" >> /etc/php/7.4/fpm/php.ini && \
     mkdir -p $APPDIR && \
     chown -R $USER:$USER $APPDIR && \
     find $APPDIR -type d -exec chmod 775 {} + && \
