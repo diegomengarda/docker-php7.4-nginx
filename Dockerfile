@@ -31,7 +31,7 @@ RUN add-apt-repository ppa:ondrej/php && \
     php7.4-curl \
     php7.4-dev \
     php7.4-gd \
-    php7.4-gmp \ 
+    php7.4-gmp \
     php7.4-intl \
     php7.4-json \
     php7.4-ldap \
@@ -44,6 +44,7 @@ RUN add-apt-repository ppa:ondrej/php && \
     php7.4-xsl \
     php7.4-zip \
     php7.4-sqlite \
+    php7.4-mongodb \
     php-apcu \
     php-pear && \
     apt-get clean && \
@@ -86,7 +87,7 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     chmod +x /usr/local/bin/docker-entrypoint && \
     chmod +x /usr/local/bin/start
 
-EXPOSE 80 6006
+EXPOSE 80
 
 ENTRYPOINT ["docker-entrypoint"]
 
