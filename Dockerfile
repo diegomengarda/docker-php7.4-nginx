@@ -82,6 +82,8 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     sed -i "s/^user.*/user ${USER};/" /etc/nginx/nginx.conf && \
     echo "extension=redis.so" >> /etc/php/7.4/fpm/php.ini && \
     echo "extension=mongodb.so" >> /etc/php/7.4/fpm/php.ini && \
+    echo "extension=mongodb.so" >> /etc/php/7.4/fpm/conf.g/20-pdo_mongodb.ini && \
+    echo "extension=mongodb.so" >> /etc/php/7.4/cli/conf.g/20-pdo_mongodb.ini && \
     mkdir -p $APPDIR && \
     chown -R $USER:$USER $APPDIR && \
     find $APPDIR -type d -exec chmod 775 {} + && \
