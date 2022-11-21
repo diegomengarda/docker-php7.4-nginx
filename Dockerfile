@@ -53,9 +53,11 @@ RUN add-apt-repository ppa:ondrej/php && \
     rm /etc/nginx/sites-enabled/default && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apt -y install gcc make autoconf libc-dev libXrender
+RUN apt -y install gcc make autoconf libc-dev
 
 RUN pecl install redis mongodb
+
+RUN apt -y purge 'php8*'
 
 COPY app.conf /etc/nginx/sites-enabled/app
 COPY nginx.conf /etc/nginx/nginx.conf
