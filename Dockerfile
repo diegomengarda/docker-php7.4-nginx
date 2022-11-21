@@ -36,6 +36,7 @@ RUN add-apt-repository ppa:ondrej/php && \
     php7.4-json \
     php7.4-ldap \
     php7.4-mbstring \
+    php7.4-imagick \
     php7.4-mysql \
     php7.4-pgsql \
     php7.4-soap \
@@ -52,7 +53,7 @@ RUN add-apt-repository ppa:ondrej/php && \
     rm /etc/nginx/sites-enabled/default && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apt -y install gcc make autoconf libc-dev
+RUN apt -y install gcc make autoconf libc-dev libXrender
 
 RUN pecl install redis mongodb
 
@@ -82,8 +83,6 @@ RUN sed -i "s|;*max_execution_time =.*|max_execution_time = 150|i" /etc/php/7.4/
     sed -i "s/^user.*/user ${USER};/" /etc/nginx/nginx.conf && \
     echo "extension=redis.so" >> /etc/php/7.4/fpm/php.ini && \
     echo "extension=mongodb.so" >> /etc/php/7.4/fpm/php.ini && \
-    echo "extension=mongodb.so" >> /etc/php/7.4/fpm/conf.g/20-pdo_mongodb.ini && \
-    echo "extension=mongodb.so" >> /etc/php/7.4/cli/conf.g/20-pdo_mongodb.ini && \
     mkdir -p $APPDIR && \
     chown -R $USER:$USER $APPDIR && \
     find $APPDIR -type d -exec chmod 775 {} + && \
